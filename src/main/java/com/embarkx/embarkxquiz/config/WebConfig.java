@@ -3,9 +3,10 @@ package com.embarkx.embarkxquiz.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer {
     @Value("${app.cors.allowed-origins}")
     private String allowedOrigins;
 
@@ -19,9 +20,10 @@ public class WebConfig {
     private Long maxAge;
 
 
+    @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(allowedOrigins.split(","))
+                .allowedOriginPatterns(allowedOrigins.split(","))
                 .allowedMethods(allowedMethods.split(","))
                 .allowedHeaders(allowedHeaders.split(","))
                 .allowCredentials(true)

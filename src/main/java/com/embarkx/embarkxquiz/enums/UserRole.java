@@ -2,8 +2,8 @@ package com.embarkx.embarkxquiz.enums;
 
 public enum UserRole {
     ADMIN("Admin"),
-    INSTRUCTOR("Instructor"),
-    LEARNER("Learner");
+    TEACHER("Teacher"),
+    STUDENT("Student");
 
     private final String displayName;
 

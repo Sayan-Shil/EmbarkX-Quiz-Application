@@ -11,8 +11,8 @@ public class SecurityConstants {
     // Authorities
     public static final String ROLE_PREFIX = "ROLE_";
     public static final String AUTHORITY_ADMIN = "ROLE_ADMIN";
-    public static final String AUTHORITY_TEACHER = "ROLE_INSTRUCTOR";
-    public static final String AUTHORITY_STUDENT = "ROLE_LEARNER";
+    public static final String AUTHORITY_TEACHER = "ROLE_TEACHER";
+    public static final String AUTHORITY_STUDENT = "ROLE_STUDENT";
 
     // Public URLs
     public static final String[] PUBLIC_URLS = {

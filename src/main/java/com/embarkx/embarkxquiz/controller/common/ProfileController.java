@@ -20,7 +20,7 @@ public class ProfileController {
     private final UserService userService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'INSTRUCTOR', 'LEARNER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<ApiResponse<UserResponseDTO>> getCurrentUserProfile(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String email = userDetails.getUsername();
@@ -30,7 +30,7 @@ public class ProfileController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'INSTRUCTOR', 'LEARNER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'STUDENT')")
     public ResponseEntity<ApiResponse<UserResponseDTO>> updateCurrentUserProfile(
             @Valid @RequestBody User updatedUser,
             Authentication authentication) {
@@ -45,7 +45,7 @@ public class ProfileController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR', 'LEARNER')")
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER', 'STUDENT')")
     public ResponseEntity<ApiResponse<UserResponseDTO>> getUserById(@PathVariable Long id) {
         UserResponseDTO user = userService.getUserById(id);
         return ResponseEntity.ok(ApiResponse.success(user, MessageConstants.USER_FETCHED_SUCCESS));
