@@ -23,4 +23,11 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
     @Query("SELECT SUM(q.marks) FROM Question q WHERE q.quiz.id = :quizId")
     Integer sumMarksByQuizId(@Param("quizId") Long quizId);
+
+    @Query("""
+    SELECT q FROM Question q
+    WHERE q.quiz.id = :quizId
+    AND q.id IN :questionIds
+""")
+    List<Question> findAllById(List<Long> questionIds);
 }
