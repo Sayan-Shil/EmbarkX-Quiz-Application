@@ -10,6 +10,7 @@ import com.embarkx.embarkxquiz.exception.custom.UnauthorizedException;
 import com.embarkx.embarkxquiz.mapper.UserMapper;
 import com.embarkx.embarkxquiz.models.user.User;
 import com.embarkx.embarkxquiz.repositories.user.UserRepository;
+import com.embarkx.embarkxquiz.services.email.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +34,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final UserMapper userMapper;
+    private final EmailService emailService;
 
     @Override
     public LoginResponseDTO login(LoginRequestDTO loginRequest) {
@@ -94,6 +96,11 @@ public class AuthServiceImpl implements AuthService {
 
         User savedUser = userRepository.save(user);
         log.info("User registered successfully: {}", savedUser.getEmail());
+
+        emailService.sendWelcomeEmail(
+                savedUser.getEmail(),
+                savedUser.getFirstName() + " " + savedUser.getLastName()
+        );
 
         return userMapper.toResponseDTO(savedUser);
 

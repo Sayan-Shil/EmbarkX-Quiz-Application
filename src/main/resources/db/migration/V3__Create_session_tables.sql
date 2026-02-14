@@ -1,0 +1,72 @@
+-- V3__Create_session_tables.sql
+
+CREATE TABLE IF NOT EXISTS sessions (
+                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                        quiz_id BIGINT NOT NULL,
+                                        student_id BIGINT NOT NULL,
+                                        status VARCHAR(50) NOT NULL,
+    start_time TIMESTAMP,
+    end_time TIMESTAMP,
+    submit_time TIMESTAMP,
+    time_taken_minutes INT,
+    score_obtained INT,
+    total_score INT,
+    percentage DOUBLE,
+    is_passed BOOLEAN,
+    attempt_number INT DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_quiz_id (quiz_id),
+    INDEX idx_student_id (student_id),
+    INDEX idx_status (status),
+    INDEX idx_student_quiz (student_id, quiz_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS answers (
+                                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                       session_id BIGINT NOT NULL,
+                                       question_id BIGINT NOT NULL,
+                                       selected_option_id BIGINT,
+                                       text_answer VARCHAR(2000),
+    is_correct BOOLEAN,
+    marks_obtained INT,
+    time_spent_seconds INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+    FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE,
+    FOREIGN KEY (selected_option_id) REFERENCES options(id) ON DELETE SET NULL,
+    INDEX idx_session_id (session_id),
+    INDEX idx_question_id (question_id),
+    INDEX idx_is_correct (is_correct),
+    UNIQUE KEY unique_session_question (session_id, question_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS results (
+                                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                       session_id BIGINT NOT NULL UNIQUE,
+                                       quiz_id BIGINT NOT NULL,
+                                       student_id BIGINT NOT NULL,
+                                       score_obtained INT NOT NULL,
+                                       total_score INT NOT NULL,
+                                       percentage DOUBLE NOT NULL,
+                                       is_passed BOOLEAN NOT NULL,
+                                       total_questions INT,
+                                       correct_answers INT,
+                                       wrong_answers INT,
+                                       unanswered INT,
+                                       time_taken_minutes INT,
+                                       `rank` INT,
+                                       feedback VARCHAR(1000),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+    FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_quiz_id (quiz_id),
+    INDEX idx_student_id (student_id),
+    INDEX idx_percentage (percentage),
+    INDEX idx_is_passed (is_passed)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
